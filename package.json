@@ -1,0 +1,24 @@
+{
+  "name": "letterboxdapp",
+  "version": "1.0.0",
+  "description": "Web app to help friends choose movies together",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yungscotia/friends-movies.git"
+  },
+  "keywords": [
+    "movies",
+    "films",
+    "friends"
+  ],
+  "author": "Nova Quaoser",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yungscotia/friends-movies/issues"
+  },
+  "homepage": "https://github.com/yungscotia/friends-movies#readme"
+}
