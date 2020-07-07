@@ -1,7 +1,9 @@
 import React from 'react';
 import logo from './assets/logo.svg';
 import arrowRight from './assets/arrowright.svg';
+import getFilms from './handlers/filmscraper';
 import './App.css';
+import Axios from 'axios';
 
 function App() {
   const [username, setValue] = React.useState('');
@@ -24,17 +26,32 @@ function App() {
     setValue(event.target.value);
   }
 
+  async function getData(username) {
+    const response = await Axios.get("http://localhost:8080/" + username);
+    const text = await response.data;
+    console.log(text);
+  };
+
   function handleSubmit(event) {
     if(username) {
       setUsername(usernames.concat(username));
     }
 
     event.preventDefault();
+    
+    getData(username);
+    
+    /*fetch("http://localhost:8080/" + username)
+      .then(function(response)  {
+        response.text().then(data => console.log(data))
+      });
+    */
     setValue('');
   }
 
   function handleClear(event) {
     setUsername([]);
+    setData([]);
   }
   return (
     <div className="App">
@@ -60,6 +77,7 @@ function App() {
             <li className="username" key={item}> <a href={"https://letterboxd.com/" + item} target="_blank">{item}</a> </li>
           ))}
         </ul>
+        <p></p>
       </div>
     </div>
   );
