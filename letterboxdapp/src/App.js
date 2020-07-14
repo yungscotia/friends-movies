@@ -5,6 +5,8 @@ import getFilms from './handlers/filmscraper';
 import './App.css';
 import Axios from 'axios';
 
+import Film from './componenets/filmContainer';
+
 function App() {
   const [username, setValue] = React.useState('');
   const [usernames, setUsername] = React.useState([]);
@@ -13,6 +15,9 @@ function App() {
   const [main, setMain] = React.useState(false);
   let headerClass;
   let mainClass;
+  
+  let renderedData = data ? data.map(film => 
+    (<Film title={film.title} poster={film.poster} link={film.link} rating={film.rating}/>)) : (<li>No Data Yet</li>);
 
   headerClass = header ? 'App-header':'hideHeader';
   mainClass = main ? 'mainPage' : 'hideMain';
@@ -29,24 +34,17 @@ function App() {
   async function getData(username) {
     const response = await Axios.get("http://localhost:8080/" + username);
     const text = await response.data;
-    console.log(text);
+    return text;
   };
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     if(username) {
       setUsername(usernames.concat(username));
     }
 
     event.preventDefault();
-    
-    getData(username);
-    
-    /*fetch("http://localhost:8080/" + username)
-      .then(function(response)  {
-        response.text().then(data => console.log(data))
-      });
-    */
     setValue('');
+    setData(await getData(username));
   }
 
   function handleClear(event) {
@@ -77,7 +75,13 @@ function App() {
             <li className="username" key={item}> <a href={"https://letterboxd.com/" + item} target="_blank">{item}</a> </li>
           ))}
         </ul>
-        <p></p>
+        <div className="data">
+          <h2>data</h2>
+          <ul className="no-bullets">
+            {renderedData}
+          </ul>
+        </div>
+        
       </div>
     </div>
   );
