@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@tensorflow/tfjs": "^2.0.1",
+    "@tensorflow/tfjs-node": "^2.0.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
@@ -13,9 +15,14 @@
     "http": "0.0.1-security",
     "http-status": "^1.4.2",
     "isomorphic-fetch": "^2.2.1",
+    "json-formatter-js": "^2.3.4",
     "puppeteer": "^5.0.0",
     "react": "^16.13.1",
+    "react-burger-menu": "^2.7.1",
     "react-dom": "^16.13.1",
+    "react-loader-spinner": "^3.1.14",
+    "react-pro-sidebar": "^0.4.3",
+    "react-router": "^5.2.0",
     "react-scripts": "3.4.1"
   },
   "scripts": {

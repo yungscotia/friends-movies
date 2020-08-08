@@ -4,7 +4,8 @@ const cors = require('cors');
 const pino = require('express-pino-logger')();
 const fetch = require('isomorphic-fetch');
 const cheerio = require('cheerio');
-const puppeteer = require('puppeteer');
+const fs = require('fs');
+const datafile = require('../yungscotia.json');
 
 
 const app = express();
@@ -17,16 +18,22 @@ app.listen(port, function() {
 app.use(cors());
 app.use(pino);
 
-app.get('/', (req, res, next) => {
-    res.status(200).json({
-        overview: "okay please work"
-    });
+app.get('/runmodel', async (req, res, next) => {
+    let recommendations = buildModel();
+    res.send(recommendations);
 });
 
 app.get('/:username', async (req, res, next) => {
     let username = req.params.username;
     const data_url = "https://letterboxd.com/" + username + '/films';
     let filmData = await reqHandler.getData(data_url);
+    let writeData = JSON.stringify(filmData);
+    fs.writeFile(username + '.json', writeData, (err) => {
+        if(err) {
+            throw(err);
+        }
+        console.log("JSON data saved to", username+'.json');
+    });
     res.json(filmData);
 });
 
@@ -51,4 +58,19 @@ app.get('/film/:filmname', async (req, res, next) => {
             return id;
         })
     res.send(filmData);
-})
+});
+
+
+/*
+app.get('/twitter/:searchterm', async (req, res, next) => {
+    let searchTerm = req.params.searchterm;
+    let data_url = 'https://stream.twitter.com/1.1/statuses/filter.json?track=' + searchTerm;
+
+    let twitterData = await fetch(data_url)
+        .then(response => response.text())
+        .then(function(data) {
+            return data;
+        })
+    res.send(twitterData);
+});
+*/

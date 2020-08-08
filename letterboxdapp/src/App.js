@@ -1,23 +1,217 @@
-import React from 'react';
+import React, { Component } from 'react';
 import logo from './assets/logo.svg';
 import arrowRight from './assets/arrowright.svg';
-import getFilms from './handlers/filmscraper';
 import './App.css';
 import Axios from 'axios';
+import Loader from 'react-loader-spinner';
 
 import Film from './componenets/filmContainer';
+import SideBar from './componenets/sidebar.js';
+
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: '',
+      usernames: [],
+      data: new Map(),
+      header: true,
+      main: false,
+      loading: false,
+      canceled: false,
+      activeTab: '',
+      renderedData: [],
+      menuOpen: false,
+      dataTab: 'dataTabBeforeOpen'
+    }
+    this.isOpen = false;
+    //binding functions
+    this.handleHeader = this.handleHeader.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleClear = this.handleClear.bind(this);
+    this.getData = this.getData.bind(this);
+    this.handleTabClick = this.handleTabClick.bind(this);
+    }
+  
+    handleHeader() {
+      this.setState({header: false});
+      this.setState({main: true});
+      setTimeout(() => {
+        this.setState({
+          menuOpen: true,
+          dataTab: 'dataTabAfterOpen'
+        });}, 2280);
+        
+        /*
+        setTimeout(() => {
+          this.setState({
+            dataTab: 'dataTabAfterOpen'
+          });}, 2100);
+        */
+      
+    };
+    
+    handleChange(event) {
+      this.setState({username: event.target.value});
+    }
+  
+    async getData(username) {
+      this.setState({
+        canceled: false,
+        loading: true
+      })
+      const response = await Axios.get("http://localhost:8080/" + username);
+      const text = await response.data;
+      //setLoading(false);
+      return text;
+    };
+  
+    async handleSubmit(event) {
+      const input = this.state.username;
+      if(this.state.username) {
+        this.setState({usernames : this.state.usernames.concat(this.state.username)});
+      }
+      this.setState({username: ''});
+      event.preventDefault();
+      let temp = this.state.data;
+      temp.set(input, await this.getData(input));
+      this.setState(
+        {
+          data: temp,
+          activeTab: input,
+          loading: false
+        });
+      console.log(this.state.data, this.state.data.size);
+    }
+  
+    handleClear(event) {
+      this.setState({
+        usernames: [],
+        data: new Map(),
+        loading: false,
+        cancel: true
+      })
+    }
+
+    handleTabClick(user) {
+      console.log(user);
+      this.setState({
+        activeTab: user
+      });
+    }
+
+    render() {
+      
+      let headerClass = this.state.header ? 'App-header':'hideHeader';
+      let mainClass = this.state.main ? 'mainPage' : 'hideMain';
+
+      if(this.state.loading) {
+        this.state.renderedData = (
+          <div className="loader">
+            <Loader 
+              type="Grid"
+              color="#0070f3"
+              height="10vh"
+              width="10vh"
+            />
+          </div>
+        );
+      } else if(this.state.canceled) {
+          this.state.renderedData = (<div>No Username Inputted</div>);
+      } else if(this.state.data.size != 0) {
+          console.log(this.state.activeTab, this.state.data);
+          let activeTabData = this.state.data.get(this.state.activeTab);
+          this.state.renderedData = activeTabData.map(film => 
+            (<Film title={film.title} poster={film.poster} link={film.link} rating={film.user_rating}/>));
+      } else {
+          console.log(this.state.data, this.state.data.size);
+          this.state.renderedData = (<div>No Username Inputted</div>);
+      }
+      
+      return (
+        <div className="App">
+          <header className={headerClass}>
+            <img src={logo} className="App-logo" alt="logo" />
+            <h1>Welcome to <a href="fleapit.com/about">Fleapit</a></h1>
+            <p>
+              Find movies to watch with your friends using your <a href="https://letterboxd.com/" target="_blank"><code>Letterboxd</code></a> username!
+            </p>
+            <div className="getstarted" onClick={this.handleHeader}>
+              <a>Get Started</a>
+              <img src={arrowRight} />
+            </div>
+          </header>
+          <div className={mainClass}>
+            <SideBar handleClick={this.handleTabClick} users={this.state.usernames} pageWrapId={"dataTab"} outerContainerId={mainClass} isOpen={this.state.menuOpen}/>
+            <div className={this.state.dataTab}>
+              <form onSubmit={this.handleSubmit}>
+                <input className="inputbox" type="text" value={this.state.username} onChange={this.handleChange} />
+                <button type="submit" className="button"> Add Username </button>
+              </form>
+              <button type="clear" className="button" onClick={this.handleClear}>clear</button>
+              <ul className="no-bullets">
+                {this.state.usernames.map(item => (
+                  <li className="username" key={item}> <a href={"https://letterboxd.com/" + item} target="_blank">{item}</a> </li>
+                ))}
+              </ul>
+              <div className="data">
+                <h2>data</h2>
+                <ul className="no-bullets">
+                  {this.state.renderedData}
+                </ul>
+              </div>
+            </div>
+            
+          </div>
+      </div>
+      );
+    }
+}
+
+
+
+
+/*
 
 function App() {
   const [username, setValue] = React.useState('');
   const [usernames, setUsername] = React.useState([]);
-  const [data, setData] = React.useState();
+  const [data, setData] = React.useState({});
   const [header, setHeader] = React.useState(true);
   const [main, setMain] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const [canceled, setCancel] = React.useState(false);
+  const [activeTab, setActiveTab] = React.useState();
+  
   let headerClass;
   let mainClass;
-  
-  let renderedData = data ? data.map(film => 
-    (<Film title={film.title} poster={film.poster} link={film.link} rating={film.rating}/>)) : (<li>No Data Yet</li>);
+  let renderedData;
+  setData(new Map());
+
+  if(loading) {
+    renderedData = (
+      <div className="loader">
+        <Loader 
+          type="Grid"
+          color="#0070f3"
+          height="10vh"
+          width="10vh"
+        />
+      </div>
+    );
+  } else if(canceled) {
+      renderedData = (<div>No Username Inputted</div>);
+  } else if(data.size != 0) {
+      console.log(activeTab, data);
+      let activeTabData = data.get(activeTab);
+      renderedData = activeTabData.map(film => 
+        (<Film title={film.title} poster={film.poster} link={film.link} rating={film.user_rating}/>));
+  } else {
+      console.log(data, data.size);
+      renderedData = (<div>No Username Inputted</div>);
+  }
 
   headerClass = header ? 'App-header':'hideHeader';
   mainClass = main ? 'mainPage' : 'hideMain';
@@ -32,25 +226,36 @@ function App() {
   }
 
   async function getData(username) {
+    setCancel(false);
+    setLoading(true);
     const response = await Axios.get("http://localhost:8080/" + username);
     const text = await response.data;
+    //setLoading(false);
     return text;
   };
 
   async function handleSubmit(event) {
+    const input = username;
     if(username) {
       setUsername(usernames.concat(username));
     }
-
-    event.preventDefault();
     setValue('');
-    setData(await getData(username));
+    event.preventDefault();
+    let temp = data;
+    temp.set(input, await getData(input));
+    setData(await temp);
+    console.log(data, data.size);
+    setLoading(false);
+    setActiveTab(input);
   }
 
   function handleClear(event) {
     setUsername([]);
-    setData([]);
+    setData(new Map());
+    setLoading(false);
+    setCancel(true);
   }
+
   return (
     <div className="App">
       <header className={headerClass}>
@@ -86,5 +291,7 @@ function App() {
     </div>
   );
 }
+*/
 
 export default App;
+

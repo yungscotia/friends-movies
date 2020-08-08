@@ -14,11 +14,13 @@ class Film extends React.Component {
         } = this.props;
         let fullLink = "https://letterboxd.com/" + link;
         return (
-            <li>
-                <img src={poster} href={link}></img>
-                <a>{title}</a>
-                <a>{rating}</a>
+            <a href={fullLink} target="_blank" >
+            <li className="film-poster">
+                <img src={poster} className="film-image"></img>
+                <div href={fullLink} target="_blank">{title}</div>
+                <div>{rating}</div>
             </li>
+            </a>
         );
     }
 }
