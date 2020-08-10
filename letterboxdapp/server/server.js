@@ -56,7 +56,7 @@ app.get('/film/:filmname', async (req, res, next) => {
             let id = $('body').attr('data-tmdb-id');
             console.log(id);
             return id;
-        })
+        });
     res.send(filmData);
 });
 

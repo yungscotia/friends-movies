@@ -156,14 +156,28 @@ a {
 }
 
 .inputbox {
-  margin: 1rem;
+  margin: auto;
+  transform: translateY(-50%);
+  top: 50%;
+  right: 20%;
+  position: absolute;
+  width: 7vw;
+  height: 2vh;
   flex-basis: 45%;
-  padding: 1.5rem;
+  padding: 1rem;
   text-align: left;
-  text-decoration: none;
+  text-decoration-color: #b8b7ad;
+  border: none;
+  border-bottom: 1px solid #eaeaea;
+  background-color: #373a47;
+  /*
   border: 1px solid #eaeaea;
   border-radius: 5px;
-  transition: color 0.15s ease, border-color 0.15s ease;
+  */
+}
+
+.inputbox:focus {
+  outline:none;
 }
 
 .no-bullets {
@@ -229,6 +243,23 @@ a {
   animation-timing-function: ease;
 }
 
+#adduser {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  left: 1vw;
+}
+
+.addUserText {
+  margin: 0;
+  position: absolute;
+  right: 4vw;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
 /* 
 SIDEBAR CSS !!! 
 */
@@ -275,8 +306,9 @@ Note: Beware of modifying this element as it can break the animations - you shou
 /* General sidebar styles */
 .bm-menu {
   background: #373a47;
-  padding: 2.5em 1.5em 0;
+  padding: 1em 1.5em 0;
   font-size: 1.15em;
+  width: 20vw;
 }
 
 /* Morph shape necessary with bubble or elastic */
@@ -293,8 +325,13 @@ Note: Beware of modifying this element as it can break the animations - you shou
 /* Individual item */
 .bm-item {
   display: inline-block;
-  padding-top: 10%;
-  padding-bottom: 10%;
+  margin-top: 10%;
+  margin-bottom: 10%;
+  position: relative;
+  height: 10vh;
+}
+.bm-item:focus {
+  outline:none;
 }
 
 /* Styling of overlay */

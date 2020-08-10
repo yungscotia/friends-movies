@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import logo from './assets/logo.svg';
 import arrowRight from './assets/arrowright.svg';
 import './App.css';
@@ -33,6 +33,8 @@ class App extends React.Component {
     this.handleClear = this.handleClear.bind(this);
     this.getData = this.getData.bind(this);
     this.handleTabClick = this.handleTabClick.bind(this);
+    this.clearTypedValue = this.clearTypedValue.bind(this);
+    this.deleteUsername = this.deleteUsername.bind(this);
     }
   
     handleHeader() {
@@ -102,6 +104,25 @@ class App extends React.Component {
       });
     }
 
+    clearTypedValue(event) {
+      this.setState({username: ''});
+    }
+
+    deleteUsername(user) {
+      let new_usernames = this.state.usernames.filter(name => name != user);
+      this.setState({usernames: new_usernames});
+      if(this.state.data.size == 1) {
+        this.setState({data: new Map()});
+      } else {
+        let temp = this.state.data;
+        temp.delete(user);
+        this.setState({activeTab: this.state.usernames[0]});
+        this.setState({data: temp});
+      }
+      console.log('new usernames', new_usernames);
+      console.log('data after delete', this.state.data);
+    }
+
     render() {
       
       let headerClass = this.state.header ? 'App-header':'hideHeader';
@@ -144,18 +165,8 @@ class App extends React.Component {
             </div>
           </header>
           <div className={mainClass}>
-            <SideBar handleClick={this.handleTabClick} users={this.state.usernames} pageWrapId={"dataTab"} outerContainerId={mainClass} isOpen={this.state.menuOpen}/>
+            <SideBar clearTypedValue={this.clearTypedValue} deleteUsername={this.deleteUsername} handleChange={this.handleChange} handleSubmit={this.handleSubmit} handleClick={this.handleTabClick} users={this.state.usernames} typedValue={this.state.username} pageWrapId={"dataTab"} outerContainerId={mainClass} isOpen={this.state.menuOpen}/>
             <div className={this.state.dataTab}>
-              <form onSubmit={this.handleSubmit}>
-                <input className="inputbox" type="text" value={this.state.username} onChange={this.handleChange} />
-                <button type="submit" className="button"> Add Username </button>
-              </form>
-              <button type="clear" className="button" onClick={this.handleClear}>clear</button>
-              <ul className="no-bullets">
-                {this.state.usernames.map(item => (
-                  <li className="username" key={item}> <a href={"https://letterboxd.com/" + item} target="_blank">{item}</a> </li>
-                ))}
-              </ul>
               <div className="data">
                 <h2>data</h2>
                 <ul className="no-bullets">

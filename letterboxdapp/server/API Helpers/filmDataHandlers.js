@@ -77,7 +77,7 @@ async function getFilmDataOnPage(page) {
         item.user_rating = temp;
         item['details'] = details;
     }));
-
+    console.log(filmData);
     return filmData;
 }
 
@@ -101,7 +101,7 @@ async function getData(url) {
         filmPages = [];
         for(var i = 2; i < numPages; i++) {
             let page_url = url + '/page/' + i + '/';
-            await page.goto(page_url);
+            await page.goto(page_url, {waitUntil: 'networkidle2'});
             filmPages.push(getFilmDataOnPage(page));
         }
         await Promise.all(filmPages).then(response => {
@@ -110,7 +110,7 @@ async function getData(url) {
                     filmData.push(film);
                 })
             })
-        });
+        }).catch(err => console.log(err));
         /*
         for(var i = 2; i <= numPages; i++) {
             let page_url = url + '/page/' + i + '/';
@@ -122,6 +122,7 @@ async function getData(url) {
         }
         */
     }
+    console.log(filmData);
     return filmData;
 }
 
