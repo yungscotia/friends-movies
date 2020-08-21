@@ -2,7 +2,7 @@ const fetch = require('isomorphic-fetch');
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 let filmData = require('./allTMDBMovies.json');
-filmData = filmData.slice(11, 22);
+filmData = filmData.slice(0, 20);
 
 function createTMDB_API_URL(id) {
     const APIkey = '20fbcd49dc115cbc2807646f1aa53b83';
@@ -36,7 +36,8 @@ async function getAllFilmDetails(filmData) { //This is where the magic happens!
 async function getLetterboxdRating(id, browser) {
     let letterboxd_url = createLetterboxdLink(id);
     const page = await browser.newPage();
-    await page.goto(letterboxd_url, {waitUntil: 'networkidle2'});
+    await page.default
+    await page.goto(letterboxd_url, {waitUntil: 'networkidle2', timeout: 0});
     let rating = await page.evaluate(function() {
         if(document.querySelector('span.average-rating') != null) {
             return parseFloat(document.querySelector('span.average-rating').querySelector('a').innerText);

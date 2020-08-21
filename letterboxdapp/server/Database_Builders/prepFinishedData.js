@@ -19,7 +19,6 @@ function prepGenreData(film, genreMap) {
     for(var x = 0; x < film.genres.length; x++) {
         film[genreMap.get(film.genres[x].id)] = 1;
     }
-    console.log(film);
     return film;
 }
 
@@ -37,7 +36,6 @@ function prepDataForModel(data, genreMap) {
     outputs = data.map(film => {
         return film.avg_letterboxd_rating;
     })
-    console.log(outputs);
 
     fs.writeFile('DatabaseInputs.json', JSON.stringify(inputs), (err) => {
         if(err) {
