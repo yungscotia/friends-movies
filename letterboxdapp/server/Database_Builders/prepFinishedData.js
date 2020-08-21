@@ -12,51 +12,6 @@ function makeGenreMap() {
     return genres;
 };
 
-function prepGenreData(film, genreMap) {
-    for(let value of Array.from(genreMap.values())) {
-        film[value] = 0;
-    }
-    for(var x = 0; x < film.genres.length; x++) {
-        film[genreMap.get(film.genres[x].id)] = 1;
-    }
-    return film;
-}
-
-function prepDataForModel(data, genreMap) {
-    data = data.filter(item => item.avg_letterboxd_rating != null);
-    
-    inputs = data.map(film => {
-        return prepGenreData(film, genreMap);
-    }).map(film => {
-        return [film.release_date.slice(0, 4), film.popularity, film.vote_count, film.vote_average, film.action, film.adventure, film.animation, film.comedy, film.crime, film.documentary, film.drama, film.family, film.fantasy, film.history, film.horror, film.music, film.mystery, film.romance, film.scifi, film.tv, film.thriller, film.war, film.western];
-    }).map(item => {
-        return item.map(datapoint => parseFloat(datapoint));
-    });
-
-    outputs = data.map(film => {
-        return film.avg_letterboxd_rating;
-    })
-
-    fs.writeFile('DatabaseInputs.json', JSON.stringify(inputs), (err) => {
-        if(err) {
-            throw(err)
-        }
-        console.log("Prepped Inputs for entire movie database saved at DatabaseInputs")
-    });
-
-    fs.writeFile('DatabaseOutputs.json', JSON.stringify(outputs), (err) => {
-        if(err) {
-            throw(err)
-        }
-        console.log("Prepped Outputs for entire movie database saved at DatabaseOutputs")
-    });
-
-    return {
-        inputs: inputs,
-        outputs: outputs
-    };
-}
-
 function validateData(inputs, outputs) {
     console.log('validating inputs......');
     let length = inputs[0].length;
@@ -96,12 +51,65 @@ function validateData(inputs, outputs) {
     return;
 }
 
+function prepGenreData(film, genreMap) {
+    for(let value of Array.from(genreMap.values())) {
+        film[value] = 0;
+    }
+    for(var x = 0; x < film.genres.length; x++) {
+        film[genreMap.get(film.genres[x].id)] = 1;
+    }
+    return film;
+}
+
+async function prepDataForModel(data, genreMap) {
+    data = data.filter(item => item.avg_letterboxd_rating != null);
+    
+    inputs = data.map(film => {
+        return prepGenreData(film, genreMap);
+    }).map(film => {
+        return [film.release_date.slice(0, 4), film.popularity, film.vote_count, film.vote_average, film.action, film.adventure, film.animation, film.comedy, film.crime, film.documentary, film.drama, film.family, film.fantasy, film.history, film.horror, film.music, film.mystery, film.romance, film.scifi, film.tv, film.thriller, film.war, film.western];
+    }).map(item => {
+        return item.map(datapoint => parseFloat(datapoint));
+    });
+
+    outputs = data.map(film => {
+        return film.avg_letterboxd_rating;
+    })
+
+    await fs.writeFile('DatabaseInputs.json', JSON.stringify(inputs), (err) => {
+        if(err) {
+            throw(err)
+        }
+        
+        console.log("Prepped Inputs for entire movie database saved at DatabaseInputs")
+    });
+
+    await fs.writeFile('DatabaseOutputs.json', JSON.stringify(outputs), (err) => {
+        if(err) {
+            throw(err)
+        }
+        
+        console.log("Prepped Outputs for entire movie database saved at DatabaseOutputs")
+    });
+
+    
+    validateData(inputs, outputs);
+
+    return {
+        inputs: inputs,
+        outputs: outputs
+    };
+}
+
+
+
 //After getting film details for entire movie database in file getFilmDetailsByTMDBID.js
 //uncomment and run this code to generate the data for the model input and outputs to train data
 
 
 const data = require('./fullMovieDatabase.json');
 let genreMap = makeGenreMap();
-let preppedData = prepDataForModel(data, genreMap);
-validateData(preppedData.inputs, preppedData.outputs);
+prepDataForModel(data, genreMap);
+
+
 
