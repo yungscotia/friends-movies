@@ -2,7 +2,8 @@ const fetch = require('isomorphic-fetch');
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 let filmData = require('./allTMDBMovies.json');
-//filmData = filmData.slice(0, 30);
+//filmData = filmData.slice(2050, 2100);
+let idFrequencyLog = 1000;
 
 function createTMDB_API_URL(id) {
     const APIkey = '20fbcd49dc115cbc2807646f1aa53b83';
@@ -17,6 +18,9 @@ function createLetterboxdLink(id) {
 
 function getFilmDetailsByID(id) {
     let APIurl = createTMDB_API_URL(id);
+    if(id % idFrequencyLog == 0) {
+        console.log(id);
+    }
     return fetch(APIurl).then(response => response.json());
 }
 
@@ -36,7 +40,6 @@ async function getAllFilmDetails(filmData) { //This is where the magic happens!
 async function getLetterboxdRating(id, browser) {
     let letterboxd_url = createLetterboxdLink(id);
     const page = await browser.newPage();
-    await page.default
     await page.goto(letterboxd_url, {waitUntil: 'networkidle2', timeout: 0});
     let rating = await page.evaluate(function() {
         if(document.querySelector('span.average-rating') != null) {
@@ -52,16 +55,23 @@ async function getLetterboxdRating(id, browser) {
 
 async function getLetterboxdRatings(filmData) {
     filmData = prepTMDBMoviesData(filmData);
+    console.log('GETTING TMDB FILM DETAILS BY ID:');
     filmData = await getAllFilmDetails(filmData);
+    console.log('DONE GETTING TMDB FILM DETAILS!');
     const browser = await puppeteer.launch({
         headless: true
     });
+    console.log('FILTERING ONLY FOR FILMS WITH FULL DETAILS');
+    filmData = filmData.filter(item => item.id != null || item.id != undefined || !item.id);
+    console.log('GETTING LETTERBOXD RATINGS');
     await Promise.all(filmData.map(async filmDetails => {
         let id = filmDetails.id;
-        console.log(id);
+        if(id % idFrequencyLog == 0) {
+            console.log(id);
+        }
         filmDetails['avg_letterboxd_rating'] = await getLetterboxdRating(id, browser);
     }))
-    console.log(filmData);
+    //console.log(filmData);
     fs.writeFile('fullMovieDatabase.json', JSON.stringify(filmData), (err) => {
         if(err) {
             throw(err);
