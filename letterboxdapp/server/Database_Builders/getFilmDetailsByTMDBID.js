@@ -2,8 +2,8 @@ const fetch = require('isomorphic-fetch');
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 let filmData = require('./allTMDBMovies.json');
-//filmData = filmData.slice(2050, 2100);
-let idFrequencyLog = 1000;
+//filmData = filmData.slice(3000, 3050);
+let idFrequencyLog = 10000;
 
 function createTMDB_API_URL(id) {
     const APIkey = '20fbcd49dc115cbc2807646f1aa53b83';
@@ -64,6 +64,35 @@ async function getLetterboxdRatings(filmData) {
     console.log('FILTERING ONLY FOR FILMS WITH FULL DETAILS');
     filmData = filmData.filter(item => item.id != null || item.id != undefined || !item.id);
     console.log('GETTING LETTERBOXD RATINGS');
+
+
+    //SPLITTING INTO MULTIPLE PROMISES.ALL
+    let batchFraction = 4;
+    let batchSize = Math.floor(filmData.length/batchFraction);
+    console.log(`DIVIDING DATASET INTO ${batchFraction} BATCHES`);
+    let batch;
+    let finalData = [];
+
+    for(var i = 1; i <= batchFraction; i++) {
+        if(i == batchFraction) {
+            console.log(`BATCH #${i} (films ${batchSize * (i-1)} to ${filmData.length}) STARTED `);
+            batch = filmData.slice(batchSize * (i-1), filmData.length);
+        } else {
+            console.log(`BATCH #${i} (films ${batchSize * (i-1)} to ${batchSize * i}) STARTED `);
+            batch = filmData.slice(batchSize * (i-1), batchSize * i);
+        }
+
+        await Promise.all(batch.map(async filmDetails => {
+            let id = filmDetails.id;
+            if(id % idFrequencyLog == 0) {
+                console.log(id);
+            }
+            filmDetails['avg_letterboxd_rating'] = await getLetterboxdRating(id, browser);
+        }));
+        finalData = finalData.concat(batch);
+        console.log(`FINISHED BATCH #${i}`);
+    }
+    /*
     await Promise.all(filmData.map(async filmDetails => {
         let id = filmDetails.id;
         if(id % idFrequencyLog == 0) {
@@ -71,13 +100,15 @@ async function getLetterboxdRatings(filmData) {
         }
         filmDetails['avg_letterboxd_rating'] = await getLetterboxdRating(id, browser);
     }))
+    */
     //console.log(filmData);
-    fs.writeFile('fullMovieDatabase.json', JSON.stringify(filmData), (err) => {
+    console.log('FINAL DATA LENGTH: ',finalData.length);
+    fs.writeFile('fullMovieDatabase.json', JSON.stringify(finalData), (err) => {
         if(err) {
             throw(err);
         }
         console.log('full movie database created and saved at fullMovieDatabase.json');
-    })
+    });
     await browser.close();
     return console.log('all done!');
 }
