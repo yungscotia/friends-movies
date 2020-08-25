@@ -1,4 +1,4 @@
-const reqHandler = require('./API Helpers/filmDataHandlers');
+const reqHandler = require('./API_Helpers/filmDataHandlers.js');
 const express = require('express');
 const cors = require('cors');
 const pino = require('express-pino-logger')();
@@ -18,10 +18,12 @@ app.listen(port, function() {
 app.use(cors());
 app.use(pino);
 
+/*
 app.get('/runmodel', async (req, res, next) => {
     let recommendations = buildModel();
     res.send(recommendations);
 });
+*/
 
 app.get('/:username', async (req, res, next) => {
     let username = req.params.username;
