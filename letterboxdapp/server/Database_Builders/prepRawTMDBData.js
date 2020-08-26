@@ -4,7 +4,7 @@ const fs = require('fs');
 function readRawTMDBData() {
     return new Promise((resolve, reject) => {
         const readInterface = readline.createInterface({
-            input: fs.createReadStream('./allTMDBmovies'),
+            input: fs.createReadStream('./allTMDBmovies.json'),
             output: process.stdout,
             console: false
         });
@@ -22,7 +22,7 @@ function readRawTMDBData() {
 
 async function prepRawTMDBData() {
     let preppedData = await readRawTMDBData();
-
+    preppedData = preppedData.map(film => {return film.id});
     fs.writeFile('allTMDBMovies.json', JSON.stringify(preppedData), (err) => {
         if(err) {
             throw(err);
@@ -31,7 +31,7 @@ async function prepRawTMDBData() {
     });
 }
 
-//prepRawTMDBData();
+prepRawTMDBData();
 
 
 

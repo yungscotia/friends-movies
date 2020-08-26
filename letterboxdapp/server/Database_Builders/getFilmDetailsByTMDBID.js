@@ -34,7 +34,7 @@ function prepTMDBMoviesData(filmData) {
 async function getAllFilmDetails(filmData) { //This is where the magic happens!
     return Promise.all(filmData.map(async filmID => {
         return getFilmDetailsByID(filmID);
-    }))
+    })).catch(err => console.log(err));
 }
 
 async function getLetterboxdRating(id, browser) {
@@ -54,7 +54,7 @@ async function getLetterboxdRating(id, browser) {
 }
 
 async function getLetterboxdRatings(filmData) {
-    filmData = prepTMDBMoviesData(filmData);
+    //filmData = prepTMDBMoviesData(filmData);
     console.log('GETTING TMDB FILM DETAILS BY ID:');
     filmData = await getAllFilmDetails(filmData);
     console.log('DONE GETTING TMDB FILM DETAILS!');
@@ -88,7 +88,7 @@ async function getLetterboxdRatings(filmData) {
                 console.log(id);
             }
             filmDetails['avg_letterboxd_rating'] = await getLetterboxdRating(id, browser);
-        }));
+        })).catch(err => console.log(err));
         finalData = finalData.concat(batch);
         console.log(`FINISHED BATCH #${i}`);
     }
