@@ -2,7 +2,7 @@ const fetch = require('isomorphic-fetch');
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 let filmData = require('./allTMDBMovies.json');
-filmData = filmData.slice(0, 10);
+//filmData = filmData.slice(0, 10);
 let idFrequencyLog = 10000;
 
 function createTMDB_API_URL(id) {
