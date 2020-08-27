@@ -104,6 +104,11 @@ a {
   color: #0070f3;
 }
 
+h2 {
+  margin-top: 4%;
+  height: 8vh;
+}
+
 .getstarted {
   margin: 1rem;
   flex-basis: 45%;
@@ -159,17 +164,18 @@ a {
   margin: auto;
   transform: translateY(-50%);
   top: 50%;
-  right: 20%;
+  right: 13.4%;
   position: absolute;
   width: 7vw;
   height: 2vh;
   flex-basis: 45%;
   padding: 1rem;
   text-align: left;
-  text-decoration-color: #b8b7ad;
+  color: #b8b7ad;
   border: none;
   border-bottom: 1px solid #eaeaea;
   background-color: #373a47;
+  font-size: 1em;
   /*
   border: 1px solid #eaeaea;
   border-radius: 5px;
@@ -255,10 +261,14 @@ a {
 .addUserText {
   margin: 0;
   position: absolute;
-  right: 4vw;
+  right: 17%;
   top: 50%;
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
+}
+
+.addUserText:hover {
+  cursor: pointer;
 }
 /* 
 SIDEBAR CSS !!! 
@@ -307,7 +317,7 @@ Note: Beware of modifying this element as it can break the animations - you shou
 .bm-menu {
   background: #373a47;
   padding: 1em 1.5em 0;
-  font-size: 1.15em;
+  font-size: 1.2em;
   width: 20vw;
 }
 
@@ -324,11 +334,11 @@ Note: Beware of modifying this element as it can break the animations - you shou
 
 /* Individual item */
 .bm-item {
-  display: inline-block;
+  display: flex;
   margin-top: 10%;
   margin-bottom: 10%;
   position: relative;
-  height: 10vh;
+  height: 7vh;
 }
 .bm-item:focus {
   outline:none;
@@ -337,4 +347,13 @@ Note: Beware of modifying this element as it can break the animations - you shou
 /* Styling of overlay */
 .bm-overlay {
   background: rgba(0, 0, 0, 0.3);
+}
+
+#username {
+  
+  margin: auto;
+  position: absolute;
+  top: 48%;
+  transform: translateY(-50%);
+  left: 30%;
 }

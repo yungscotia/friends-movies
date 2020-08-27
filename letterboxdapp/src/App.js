@@ -26,6 +26,7 @@ class App extends React.Component {
       dataTab: 'dataTabBeforeOpen'
     }
     this.isOpen = false;
+    this.shouldMenuOpen = false;
     //binding functions
     this.handleHeader = this.handleHeader.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -45,7 +46,6 @@ class App extends React.Component {
           menuOpen: true,
           dataTab: 'dataTabAfterOpen'
         });}, 2280);
-        
         /*
         setTimeout(() => {
           this.setState({
@@ -124,9 +124,9 @@ class App extends React.Component {
     }
 
     render() {
-      
       let headerClass = this.state.header ? 'App-header':'hideHeader';
       let mainClass = this.state.main ? 'mainPage' : 'hideMain';
+      this.shouldMenuOpen = this.state.menuOpen ? true : false;
 
       if(this.state.loading) {
         this.state.renderedData = (
@@ -165,10 +165,10 @@ class App extends React.Component {
             </div>
           </header>
           <div className={mainClass}>
-            <SideBar clearTypedValue={this.clearTypedValue} deleteUsername={this.deleteUsername} handleChange={this.handleChange} handleSubmit={this.handleSubmit} handleClick={this.handleTabClick} users={this.state.usernames} typedValue={this.state.username} pageWrapId={"dataTab"} outerContainerId={mainClass} isOpen={this.state.menuOpen}/>
+            <SideBar shouldMenuOpen={this.shouldMenuOpen} clearTypedValue={this.clearTypedValue} deleteUsername={this.deleteUsername} handleChange={this.handleChange} handleSubmit={this.handleSubmit} handleClick={this.handleTabClick} users={this.state.usernames} typedValue={this.state.username} pageWrapId={"dataTab"} outerContainerId={mainClass} isOpen={this.state.menuOpen}/>
             <div className={this.state.dataTab}>
               <div className="data">
-                <h2>data</h2>
+                <h2>Films</h2>
                 <ul className="no-bullets">
                   {this.state.renderedData}
                 </ul>
