@@ -1,5 +1,6 @@
 import React from 'react';
 import {bubble as Menu} from 'react-burger-menu';
+import UserTab from './userTab.js';
 
 class SideBar extends React.Component {
     constructor(props) {
@@ -120,12 +121,7 @@ class SideBar extends React.Component {
         return (
             <Menu pageWrapId={this.props.pageWrapId} outerContainerId={this.props.outerContainerId} isOpen={this.props.shouldMenuOpen} customCrossIcon={false} disableAutoFocus disableCloseOnEsc disableOverlayClick noOverlay>
                 {this.props.users.map(user => (
-                    <div>
-                        <svg width="1.5vw" height="1.5vw" viewBox="0 0 16 16" className="bi bi-x-square-fill" id="adduser" fill="currentColor" xmlns="http://www.w3.org/2000/svg" onClick={() => this.removeUser(user)}>
-                            <path fill-rule="evenodd" d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm9.854 4.854a.5.5 0 0 0-.708-.708L8 7.293 4.854 4.146a.5.5 0 1 0-.708.708L7.293 8l-3.147 3.146a.5.5 0 0 0 .708.708L8 8.707l3.146 3.147a.5.5 0 0 0 .708-.708L8.707 8l3.147-3.146z"/>
-                        </svg>
-                        <a id="username" className="menu-item" onClick={() => this.changeActiveTab(user)}>{user}</a>
-                    </div>
+                    <UserTab removeUser={this.removeUser} changeActiveTab={this.changeActiveTab} user={user}></UserTab>
                 ))}
                 {addUserForm}
             </Menu>
