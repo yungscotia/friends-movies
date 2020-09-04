@@ -2,7 +2,7 @@ const fetch = require('isomorphic-fetch');
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 let filmData = require('./allTMDBMovies.json');
-//filmData = filmData.slice(0, 10);
+filmData = filmData.slice(0, 10);
 let idFrequencyLog = 10000;
 
 function createTMDB_API_URL(id) {
@@ -62,7 +62,8 @@ async function getLetterboxdRatings(filmData) {
         headless: true
     });
     console.log('FILTERING ONLY FOR FILMS WITH FULL DETAILS');
-    filmData = filmData.filter(item => item != null);
+    filmData = filmData.filter(item => item != null && item != undefined && item);
+    filmData = filmData.filter(item => item.id != null && item.id != undefined && item.id);
     console.log('GETTING LETTERBOXD RATINGS');
 
 
@@ -89,6 +90,7 @@ async function getLetterboxdRatings(filmData) {
             }
             filmDetails['avg_letterboxd_rating'] = await getLetterboxdRating(id, browser);
         })).catch(err => console.log(err));
+        console.log(`TOTAL DATA SIZE AS OF NEW BATCH: ${finalData.length}`);
         finalData = finalData.concat(batch);
         console.log(`FINISHED BATCH #${i}`);
     }
