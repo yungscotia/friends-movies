@@ -2,6 +2,13 @@ const fetch = require('isomorphic-fetch');
 const cheerio = require('cheerio');
 const puppeteer = require('puppeteer');
 
+async function getProfile(username, page) {
+    const url = "https://letterboxd.com/" + username;
+    await page.goto(url, {waitUntil: 'networkidle2'});
+    let profileImg = await page.evaluate(() => document.querySelector('div.profile-avatar').querySelector('span').querySelector('img').src);
+    return profileImg;
+}
+
 function parseRating(rating) {
     if(!rating || rating.length == 0) {
         return null;
@@ -77,11 +84,11 @@ async function getFilmDataOnPage(page) {
         item.user_rating = temp;
         item['details'] = details;
     }));
-    console.log(filmData);
     return filmData;
 }
 
-async function getData(url) {
+async function getData(username) {
+    const url = "https://letterboxd.com/" + username + '/films';
     const browser = await puppeteer.launch({
         headless: true
     });
@@ -122,8 +129,11 @@ async function getData(url) {
         }
         */
     }
-    console.log(filmData);
-    return filmData;
+    let allData = {};
+    allData['data'] = filmData;
+    allData['profile'] = await getProfile(username, page);
+    
+    return allData;
 }
 
 module.exports = {getData};

@@ -62,7 +62,7 @@ async function getLetterboxdRatings(filmData) {
         headless: true
     });
     console.log('FILTERING ONLY FOR FILMS WITH FULL DETAILS');
-    filmData = filmData.filter(item => item.id != null || item.id != undefined || item.id);
+    filmData = filmData.filter(item => item != null);
     console.log('GETTING LETTERBOXD RATINGS');
 
 

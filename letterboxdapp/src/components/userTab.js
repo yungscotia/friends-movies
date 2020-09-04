@@ -45,7 +45,7 @@ class UserTab extends React.Component {
             );
         }
         return ( 
-            <div className="bm-item" >
+            <div className="bm-item" id="username-item">
                 {button}
                 <a id="username" className="menu-item" onClick={() => this.changeActiveTab(user)}>{user}</a>
             </div>

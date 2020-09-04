@@ -5,7 +5,6 @@ const pino = require('express-pino-logger')();
 const fetch = require('isomorphic-fetch');
 const cheerio = require('cheerio');
 const fs = require('fs');
-const datafile = require('../yungscotia.json');
 
 
 const app = express();
@@ -27,10 +26,10 @@ app.get('/runmodel', async (req, res, next) => {
 
 app.get('/:username', async (req, res, next) => {
     let username = req.params.username;
-    const data_url = "https://letterboxd.com/" + username + '/films';
-    let filmData = await reqHandler.getData(data_url);
+    let filmData = await reqHandler.getData(username);
+    console.log(filmData);
     let writeData = JSON.stringify(filmData);
-    fs.writeFile(username + '.json', writeData, (err) => {
+    fs.writeFile(username + '.json', writeData.data, (err) => {
         if(err) {
             throw(err);
         }
@@ -39,7 +38,7 @@ app.get('/:username', async (req, res, next) => {
     res.json(filmData);
 });
 
-
+/*
 app.get('/test/:username', async (req, res, next) => {
     let username = req.params.username;
     const data_url = "https://letterboxd.com/" + username + '/films';

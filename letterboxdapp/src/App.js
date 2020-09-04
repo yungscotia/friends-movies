@@ -5,8 +5,9 @@ import './App.css';
 import Axios from 'axios';
 import Loader from 'react-loader-spinner';
 
-import Film from './componenets/filmContainer';
-import SideBar from './componenets/sidebar.js';
+import Film from './components/filmContainer';
+import SideBar from './components/sidebar.js';
+import DataContainer from './components/dataContainer.js';
 
 
 class App extends React.Component {
@@ -127,7 +128,7 @@ class App extends React.Component {
       let headerClass = this.state.header ? 'App-header':'hideHeader';
       let mainClass = this.state.main ? 'mainPage' : 'hideMain';
       this.shouldMenuOpen = this.state.menuOpen ? true : false;
-
+      /*
       if(this.state.loading) {
         this.state.renderedData = (
           <div className="loader">
@@ -147,9 +148,9 @@ class App extends React.Component {
           this.state.renderedData = activeTabData.map(film => 
             (<Film title={film.title} poster={film.poster} link={film.link} rating={film.user_rating}/>));
       } else {
-          console.log(this.state.data, this.state.data.size);
-          this.state.renderedData = (<div>No Username Inputted</div>);
+          this.state.renderedData = (<code>No Username Inputted</code>);
       }
+      */
       
       return (
         <div className="App">
@@ -167,12 +168,7 @@ class App extends React.Component {
           <div className={mainClass}>
             <SideBar shouldMenuOpen={this.shouldMenuOpen} clearTypedValue={this.clearTypedValue} deleteUsername={this.deleteUsername} handleChange={this.handleChange} handleSubmit={this.handleSubmit} handleClick={this.handleTabClick} users={this.state.usernames} typedValue={this.state.username} pageWrapId={"dataTab"} outerContainerId={mainClass} isOpen={this.state.menuOpen}/>
             <div className={this.state.dataTab}>
-              <div className="data">
-                <h2>Films</h2>
-                <ul className="no-bullets">
-                  {this.state.renderedData}
-                </ul>
-              </div>
+              <DataContainer loading={this.state.loading} canceled={this.state.canceled} activeTab={this.state.activeTab} data={this.state.data} />
             </div>
             
           </div>

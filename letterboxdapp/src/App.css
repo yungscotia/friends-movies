@@ -92,11 +92,23 @@
 
 code {
   background: #fafafa;
+  color: #0070f3;
   border-radius: 5px;
   padding: 0.75rem;
   font-size: 1.1rem;
   font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
     DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
+}
+
+.dataContainer {
+  background: #fafafa;
+  color: #0070f3;
+  border-radius: 10px;
+  padding: 0.75rem;
+  min-height: 95vh;
+  width: 95%;
+  margin: auto;
+  margin-top: 1vw;
 }
 
 a {
@@ -107,6 +119,19 @@ a {
 h2 {
   margin-top: 4%;
   height: 8vh;
+}
+
+.dataHeader {
+  margin-bottom: 4%;
+  height: 4vh;
+  margin-top: 1%;
+}
+
+.rounded-image {
+  border-radius: 50%;
+  height: 7rem;
+  object-fit: cover;
+  margin-top: 4vh;
 }
 
 .getstarted {
@@ -270,6 +295,19 @@ h2 {
 .addUserText:hover {
   cursor: pointer;
 }
+
+#username-item {
+  background: white;
+  border-radius: 5px;
+  padding: 0.75rem;
+  font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
+    DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
+}
+
+#username-item:hover {
+  cursor: pointer;
+  background: 	#E0E0E0; 
+}
 /* 
 SIDEBAR CSS !!! 
 */
@@ -338,10 +376,14 @@ Note: Beware of modifying this element as it can break the animations - you shou
   margin-top: 10%;
   margin-bottom: 10%;
   position: relative;
-  height: 7vh;
+  height: 5vh;
 }
 .bm-item:focus {
   outline:none;
+}
+
+.bm-item:hover {
+  cursor: pointer;
 }
 
 /* Styling of overlay */
@@ -350,10 +392,9 @@ Note: Beware of modifying this element as it can break the animations - you shou
 }
 
 #username {
-  
   margin: auto;
   position: absolute;
   top: 48%;
   transform: translateY(-50%);
-  left: 30%;
+  left: 25%;
 }
