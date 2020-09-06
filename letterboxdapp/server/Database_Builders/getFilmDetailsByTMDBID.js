@@ -4,6 +4,7 @@ const fs = require('fs');
 let filmData = require('./allTMDBMovies.json');
 //filmData = filmData.slice(0, 10);
 let idFrequencyLog = 10000;
+//console.log('length of all films', filmData.length); 537613
 
 function createTMDB_API_URL(id) {
     const APIkey = '20fbcd49dc115cbc2807646f1aa53b83';
@@ -63,8 +64,8 @@ async function getLetterboxdRating(id, browser) {
 
 async function getLetterboxdRatings(filmData) {
     let args = process.argv;
-    let start = args[0];
-    let end = args[1];
+    let start = args[2];
+    let end = args[3];
     //filmData = prepTMDBMoviesData(filmData);
     console.log('GETTING TMDB FILM DETAILS BY ID:');
     filmData = filmData.slice(start, end);
@@ -118,21 +119,21 @@ async function getLetterboxdRatings(filmData) {
     */
     //console.log(filmData);
     console.log('FINAL DATA LENGTH: ',finalData.length);
-    
+    /*
     fs.writeFile('fullMovieDatabase.json', JSON.stringify(finalData), (err) => {
         if(err) {
             throw(err);
         }
         console.log('full movie database created and saved at fullMovieDatabase.json');
     });
-    /*
+    */
     fs.appendFile('fullMovieDatabase.json', JSON.stringify(finalData), (err) => {
         if(err) {
             throw(err);
             console.log('this chunk of movies has been created and saved at fullMoveDatabase.json');
         }
     });
-    */
+    
     await browser.close();
     return console.log('all done!');
 }
