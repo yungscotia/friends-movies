@@ -21,12 +21,12 @@ function getFilmDetailsByID(id) {
     if(id % idFrequencyLog == 0) {
         console.log('getting film Details for film: ', id);
     }
-    return fetch(APIurl).then(response => function() {
+    return fetch(APIurl).then((response) => {
         if(id % idFrequencyLog == 0) {
             console.log('translating response into json for film: ', id);
         }
        return response.json()
-    }).catch(err => function() {
+    }).catch((err) => {
         console.log(err);
         return null
     });
@@ -62,9 +62,14 @@ async function getLetterboxdRating(id, browser) {
 }
 
 async function getLetterboxdRatings(filmData) {
+    let args = process.argv;
+    let start = args[0];
+    let end = args[1];
     //filmData = prepTMDBMoviesData(filmData);
     console.log('GETTING TMDB FILM DETAILS BY ID:');
+    filmData = filmData.slice(start, end);
     filmData = await getAllFilmDetails(filmData);
+    console.log(filmData);
     console.log('DONE GETTING TMDB FILM DETAILS!');
     const browser = await puppeteer.launch({
         headless: true
