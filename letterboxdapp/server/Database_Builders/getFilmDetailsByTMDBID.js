@@ -70,7 +70,6 @@ async function getLetterboxdRatings(filmData) {
     console.log('GETTING TMDB FILM DETAILS BY ID:');
     filmData = filmData.slice(start, end);
     filmData = await getAllFilmDetails(filmData);
-    console.log(filmData);
     console.log('DONE GETTING TMDB FILM DETAILS!');
     const browser = await puppeteer.launch({
         headless: true
