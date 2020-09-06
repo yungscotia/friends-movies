@@ -118,21 +118,25 @@ async function getLetterboxdRatings(filmData) {
     */
     //console.log(filmData);
     console.log('FINAL DATA LENGTH: ',finalData.length);
-    /*
-    fs.writeFile('fullMovieDatabase.json', JSON.stringify(finalData), (err) => {
+    
+    let allData = require('./fullMovieDatabase.json');
+    allData = allData.concat(finalData);
+
+    fs.writeFile('fullMovieDatabase.json', JSON.stringify(allData), (err) => {
         if(err) {
             throw(err);
         }
         console.log('full movie database created and saved at fullMovieDatabase.json');
     });
-    */
-    fs.appendFile('fullMovieDatabase.json', JSON.stringify(finalData), (err) => {
+    
+    /*
+    fs.appendFile('fullMovieDatabase.json', JSON.stringify(allData), (err) => {
         if(err) {
             throw(err);
             console.log('this chunk of movies has been created and saved at fullMoveDatabase.json');
         }
     });
-    
+    */
     await browser.close();
     return console.log('all done!');
 }
