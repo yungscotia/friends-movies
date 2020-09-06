@@ -2,7 +2,7 @@ const fetch = require('isomorphic-fetch');
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 let filmData = require('./allTMDBMovies.json');
-filmData = filmData.slice(0, 10);
+//filmData = filmData.slice(0, 10);
 let idFrequencyLog = 10000;
 
 function createTMDB_API_URL(id) {
@@ -19,9 +19,17 @@ function createLetterboxdLink(id) {
 function getFilmDetailsByID(id) {
     let APIurl = createTMDB_API_URL(id);
     if(id % idFrequencyLog == 0) {
-        console.log(id);
+        console.log('getting film Details for film: ', id);
     }
-    return fetch(APIurl).then(response => response.json()).catch(err => {return null});
+    return fetch(APIurl).then(response => function() {
+        if(id % idFrequencyLog == 0) {
+            console.log('translating response into json for film: ', id);
+        }
+       return response.json()
+    }).catch(err => function() {
+        console.log(err);
+        return null
+    });
 }
 
 function prepTMDBMoviesData(filmData) {
@@ -33,7 +41,7 @@ function prepTMDBMoviesData(filmData) {
 
 async function getAllFilmDetails(filmData) { //This is where the magic happens!
     return Promise.all(filmData.map(async filmID => {
-        return getFilmDetailsByID(filmID);
+        return await getFilmDetailsByID(filmID);
     })).catch(err => console.log(err));
 }
 
@@ -105,12 +113,21 @@ async function getLetterboxdRatings(filmData) {
     */
     //console.log(filmData);
     console.log('FINAL DATA LENGTH: ',finalData.length);
+    
     fs.writeFile('fullMovieDatabase.json', JSON.stringify(finalData), (err) => {
         if(err) {
             throw(err);
         }
         console.log('full movie database created and saved at fullMovieDatabase.json');
     });
+    /*
+    fs.appendFile('fullMovieDatabase.json', JSON.stringify(finalData), (err) => {
+        if(err) {
+            throw(err);
+            console.log('this chunk of movies has been created and saved at fullMoveDatabase.json');
+        }
+    });
+    */
     await browser.close();
     return console.log('all done!');
 }
