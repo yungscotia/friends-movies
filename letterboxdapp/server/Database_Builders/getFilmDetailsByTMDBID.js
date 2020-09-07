@@ -3,7 +3,7 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 let filmData = require('./allTMDBMovies.json');
 //filmData = filmData.slice(0, 10);
-let idFrequencyLog = 10000;
+let idFrequencyLog = 10;
 //console.log('length of all films', filmData.length); 537613
 
 function createTMDB_API_URL(id) {
@@ -77,11 +77,12 @@ async function getLetterboxdRatings(filmData) {
     console.log('FILTERING ONLY FOR FILMS WITH FULL DETAILS');
     filmData = filmData.filter(item => item != null && item != undefined && item);
     filmData = filmData.filter(item => item.id != null && item.id != undefined && item.id);
+    console.log(filmData);
     console.log('GETTING LETTERBOXD RATINGS');
 
 
     //SPLITTING INTO MULTIPLE PROMISES.ALL
-    let batchFraction = 4;
+    let batchFraction = filmData.length / 100;
     let batchSize = Math.floor(filmData.length/batchFraction);
     console.log(`DIVIDING DATASET INTO ${batchFraction} BATCHES`);
     let batch;
@@ -95,13 +96,14 @@ async function getLetterboxdRatings(filmData) {
             console.log(`BATCH #${i} (films ${batchSize * (i-1)} to ${batchSize * i}) STARTED `);
             batch = filmData.slice(batchSize * (i-1), batchSize * i);
         }
-
+        
         await Promise.all(batch.map(async filmDetails => {
             let id = filmDetails.id;
-            if(id % idFrequencyLog == 0) {
-                console.log(id);
-            }
-            filmDetails['avg_letterboxd_rating'] = await getLetterboxdRating(id, browser);
+            filmDetails['avg_letterboxd_rating'] = await getLetterboxdRating(id, browser).then(() => {
+                if(id % idFrequencyLog == 0) {
+                    console.log(id);
+                }
+            });
         })).catch(err => console.log(err));
         console.log(`TOTAL DATA SIZE AS OF NEW BATCH: ${finalData.length}`);
         finalData = finalData.concat(batch);
