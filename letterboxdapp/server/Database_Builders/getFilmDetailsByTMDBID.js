@@ -6,6 +6,10 @@ let filmData = require('./allTMDBMovies.json');
 let idFrequencyLog = 10;
 //console.log('length of all films', filmData.length); 537613
 
+const browser = await puppeteer.launch({
+    headless: true
+});
+
 function createTMDB_API_URL(id) {
     const APIkey = '20fbcd49dc115cbc2807646f1aa53b83';
     const movieID = encodeURI(id);
@@ -71,9 +75,7 @@ async function getLetterboxdRatings(filmData) {
     filmData = filmData.slice(start, end);
     filmData = await getAllFilmDetails(filmData);
     console.log('DONE GETTING TMDB FILM DETAILS!');
-    const browser = await puppeteer.launch({
-        headless: true
-    });
+    
     console.log('FILTERING ONLY FOR FILMS WITH FULL DETAILS');
     filmData = filmData.filter(item => item != null && item != undefined && item);
     filmData = filmData.filter(item => item.id != null && item.id != undefined && item.id);
