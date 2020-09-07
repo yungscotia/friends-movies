@@ -139,7 +139,6 @@ async function getLetterboxdRatings(filmData) {
         }
     });
     */
-    await browser.close();
     return console.log('all done!');
 }
 
